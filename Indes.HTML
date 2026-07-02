@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulation de Virement</title>
+
+<style>
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f4f4;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    margin:0;
+}
+
+.container{
+    background:#fff;
+    width:420px;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 15px rgba(0,0,0,.15);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+input{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:5px;
+    box-sizing:border-box;
+}
+
+.fees{
+    margin-top:15px;
+    padding:12px;
+    background:#fff8e1;
+    border:1px solid #ffd54f;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:12px;
+    background:#007BFF;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+}
+
+button:hover{
+    background:#0056b3;
+}
+
+.result{
+    display:none;
+    margin-top:20px;
+    padding:15px;
+    background:#e7f3ff;
+    border:1px solid #b3d7ff;
+    border-radius:5px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h2>Simulation de Virement</h2>
+
+<form id="simulationForm">
+
+<label>Nom du bénéficiaire</label>
+<input type="text" id="beneficiary" required>
+
+<label>IBAN du bénéficiaire</label>
+<input type="text" id="iban" required>
+
+<label>Montant (€)</label>
+<input
+type="number"
+id="amount"
+required
+oninput="mettreAJourFrais()">
+
+<div class="fees">
+Frais à payer :
+<span id="fees">0</span> €
+</div>
+
+<label>Motif du virement</label>
+<input type="text" id="reason" required>
+
+<button type="button" onclick="simulateTransfer()">
+Simuler le virement
+</button>
+
+</form>
+
+<div class="result" id="result">
+
+<h3>Virement simulé avec succès !</h3>
+
+<p>
+Montant :
+<strong><span id="displayAmount"></span> €</strong>
+</p>
+
+<p>
+Frais :
+<strong><span id="displayFees"></span> €</strong>
+</p>
+
+<p>
+Bénéficiaire :
+<strong><span id="displayBeneficiary"></span></strong>
+</p>
+
+<p>
+Transaction fictive :
+<strong>TX-123456</strong>
+</p>
+
+<p>
+Date :
+<strong id="date"></strong>
+</p>
+
+</div>
+
+</div>
+
+<script>
+
+function calculFrais(montant){
+
+    montant = Number(montant);
+
+    if(montant <= 100){
+        return 60;
+    }
+    else if(montant <= 250){
+        return 100;
+    }
+    else if(montant <= 500){
+        return 150;
+    }
+    else if(montant <= 1000){
+        return 250;
+    }
+    else{
+        return Math.round(montant * 0.25);
+    }
+
+
+}
+
+function mettreAJourFrais(){
+
+let montant=document.getElementById("amount").value;
+
+if(montant===""){
+    document.getElementById("fees").innerHTML="0";
+    return;
+}
+
+document.getElementById("fees").innerHTML=calculFrais(montant);
+
+}
+
+function simulateTransfer(){
+
+const beneficiary=document.getElementById("beneficiary").value;
+const amount=document.getElementById("amount").value;
+
+if(beneficiary==="" || amount===""){
+    alert("Veuillez remplir tous les champs.");
+    return;
+}
+
+const frais=calculFrais(amount);
+
+document.getElementById("displayBeneficiary").innerHTML=beneficiary;
+document.getElementById("displayAmount").innerHTML=amount;
+document.getElementById("displayFees").innerHTML=frais;
+document.getElementById("date").innerHTML=new Date().toLocaleString();
+
+document.getElementById("result").style.display="block";
+
+}
+
+</script>
+
+</body>
+</html>
